@@ -1,0 +1,1069 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// =========================
+// ENUMS
+// =========================
+
+enum DocumentStatus {
+  UPLOADED
+  OCR_PROCESSED
+  VALIDATED
+  REJECTED
+}
+
+enum ValidationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  OBSERVED
+}
+
+enum EntryStatus {
+  DRAFT
+  PENDING_VALIDATION
+  APPROVED
+  REJECTED
+  REGISTERED
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DISPATCHED
+  CANCELLED
+}
+
+enum DispatchStatus {
+  PENDING
+  SENT
+  RECEIVED
+  CANCELLED
+}
+
+enum StockMovementType {
+  WAREHOUSE_ENTRY
+  WAREHOUSE_ADJUSTMENT
+  WAREHOUSE_DISPATCH
+  PHARMACY_RECEPTION
+  PHARMACY_DISPENSATION
+  PHARMACY_RETURN
+}
+
+enum AlertType {
+  LOW_STOCK
+  EXPIRATION
+  DOCUMENT_REJECTED
+  SANITARY_REGISTRATION_EXPIRED
+}
+
+enum AlertStatus {
+  PENDING
+  READ
+  RESOLVED
+}
+
+// =========================
+// SECURITY
+// =========================
+
+model User {
+  id           String  @id @default(uuid())
+  username     String  @unique
+  email        String  @unique
+  passwordHash String  @map("password_hash")
+  fullName     String  @map("full_name")
+  isActive     Boolean @default(true) @map("is_active")
+
+  roles         UserRole[]
+  refreshTokens RefreshToken[]
+  auditLogs     AuditLog[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Role {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  users       UserRole[]
+  permissions RolePermission[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  code        String  @unique
+  name        String
+  module      String?
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  roles RolePermission[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("permissions")
+}
+
+model UserRole {
+  userId String @map("user_id")
+  roleId String @map("role_id")
+
+  user User @relation(fields: [userId], references: [id])
+  role Role @relation(fields: [roleId], references: [id])
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+
+  role       Role       @relation(fields: [roleId], references: [id])
+  permission Permission @relation(fields: [permissionId], references: [id])
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid())
+  tokenHash String    @map("token_hash")
+  userId    String    @map("user_id")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("refresh_tokens")
+}
+
+model AuditLog {
+  id String @id @default(uuid())
+
+  userId String? @map("user_id")
+  user   User?   @relation(fields: [userId], references: [id])
+
+  action   String
+  module   String?
+  entity   String?
+  entityId String? @map("entity_id")
+
+  method    String?
+  path      String?
+  ipAddress String? @map("ip_address")
+  userAgent String? @map("user_agent")
+
+  oldData Json? @map("old_data")
+  newData Json? @map("new_data")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("audit_logs")
+}
+
+// =========================
+// CATALOGS
+// =========================
+
+model Laboratory {
+  id       String  @id @default(uuid())
+  nit      String? @unique
+  name     String
+  country  String?
+  isActive Boolean @default(true) @map("is_active")
+
+  sanitaryRegistrations SanitaryRegistration[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("laboratories")
+}
+
+model Manufacturer {
+  id       String  @id @default(uuid())
+  name     String
+  country  String?
+  isActive Boolean @default(true) @map("is_active")
+
+  medicines Medicine[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("manufacturers")
+}
+
+model Supplier {
+  id       String  @id @default(uuid())
+  nit      String? @unique
+  name     String
+  phone    String?
+  address  String?
+  isActive Boolean @default(true) @map("is_active")
+
+  warehouseEntries WarehouseEntry[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("suppliers")
+}
+
+model ActiveIngredient {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  medicines MedicineActiveIngredient[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("active_ingredients")
+}
+
+model PharmaceuticalForm {
+  id       String  @id @default(uuid())
+  name     String  @unique
+  isActive Boolean @default(true) @map("is_active")
+
+  medicines Medicine[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pharmaceutical_forms")
+}
+
+model Unit {
+  id       String  @id @default(uuid())
+  name     String
+  symbol   String  @unique
+  isActive Boolean @default(true) @map("is_active")
+
+  medicines Medicine[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("units")
+}
+
+model TherapeuticGroup {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  medicines Medicine[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("therapeutic_groups")
+}
+
+// =========================
+// MEDICINES
+// =========================
+
+model Medicine {
+  id          String  @id @default(uuid())
+  code        String? @unique
+  name        String
+  description String?
+
+  concentration String?
+  presentation  String?
+
+  pharmaceuticalFormId String? @map("pharmaceutical_form_id")
+  unitId               String? @map("unit_id")
+  therapeuticGroupId   String? @map("therapeutic_group_id")
+  manufacturerId       String? @map("manufacturer_id")
+
+  pharmaceuticalForm PharmaceuticalForm? @relation(fields: [pharmaceuticalFormId], references: [id])
+  unit               Unit?               @relation(fields: [unitId], references: [id])
+  therapeuticGroup   TherapeuticGroup?   @relation(fields: [therapeuticGroupId], references: [id])
+  manufacturer       Manufacturer?       @relation(fields: [manufacturerId], references: [id])
+
+  activeIngredients    MedicineActiveIngredient[]
+  sanitaryRegistrations SanitaryRegistration[]
+  batches              MedicineBatch[]
+
+  warehouseEntryDetails WarehouseEntryDetail[]
+  warehouseInventory    WarehouseInventory[]
+  pharmacyInventory     PharmacyInventory[]
+  requestDetails        RequestDetail[]
+  dispatchDetails       DispatchDetail[]
+  prescriptionDetails   PrescriptionDetail[]
+  dispensationDetails   PharmacyDispensationDetail[]
+
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("medicines")
+}
+
+model MedicineActiveIngredient {
+  medicineId         String @map("medicine_id")
+  activeIngredientId String @map("active_ingredient_id")
+
+  medicine         Medicine         @relation(fields: [medicineId], references: [id])
+  activeIngredient ActiveIngredient @relation(fields: [activeIngredientId], references: [id])
+
+  @@id([medicineId, activeIngredientId])
+  @@map("medicine_active_ingredients")
+}
+
+model SanitaryRegistration {
+  id String @id @default(uuid())
+
+  medicineId   String @map("medicine_id")
+  laboratoryId String @map("laboratory_id")
+
+  registrationNumber String    @unique @map("registration_number")
+  issuedAt           DateTime? @map("issued_at")
+  expiresAt          DateTime? @map("expires_at")
+  isActive           Boolean   @default(true) @map("is_active")
+
+  medicine   Medicine   @relation(fields: [medicineId], references: [id])
+  laboratory Laboratory @relation(fields: [laboratoryId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sanitary_registrations")
+}
+
+model MedicineBatch {
+  id String @id @default(uuid())
+
+  medicineId     String   @map("medicine_id")
+  batchNumber    String   @map("batch_number")
+  expirationDate DateTime @map("expiration_date")
+  isActive       Boolean  @default(true) @map("is_active")
+
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+
+  warehouseEntryDetails WarehouseEntryDetail[]
+  warehouseInventory    WarehouseInventory[]
+  pharmacyInventory     PharmacyInventory[]
+  dispatchDetails       DispatchDetail[]
+  dispensationDetails   PharmacyDispensationDetail[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([medicineId, batchNumber])
+  @@map("medicine_batches")
+}
+
+// =========================
+// DOCUMENTS / OCR
+// =========================
+
+model DocumentType {
+  id          String  @id @default(uuid())
+  code        String  @unique
+  name        String
+  description String?
+  isRequired  Boolean @default(false) @map("is_required")
+  isActive    Boolean @default(true) @map("is_active")
+
+  documents Document[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("document_types")
+}
+
+model Document {
+  id String @id @default(uuid())
+
+  documentTypeId String         @map("document_type_id")
+  status         DocumentStatus @default(UPLOADED)
+
+  title       String?
+  description String?
+
+  warehouseEntryId String? @map("warehouse_entry_id")
+  prescriptionId   String? @map("prescription_id")
+
+  documentType   DocumentType    @relation(fields: [documentTypeId], references: [id])
+  warehouseEntry WarehouseEntry? @relation(fields: [warehouseEntryId], references: [id])
+  prescription   Prescription?   @relation(fields: [prescriptionId], references: [id])
+
+  files       DocumentFile[]
+  ocrResults  OcrResult[]
+  validations ValidationProcess[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("documents")
+}
+
+model DocumentFile {
+  id String @id @default(uuid())
+
+  documentId String @map("document_id")
+  filePath   String @map("file_path")
+  fileName   String @map("file_name")
+  mimeType   String @map("mime_type")
+  size       Int?
+
+  document Document @relation(fields: [documentId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("document_files")
+}
+
+model OcrResult {
+  id String @id @default(uuid())
+
+  documentId String @map("document_id")
+  rawText    String @map("raw_text")
+  confidence Float?
+
+  document Document            @relation(fields: [documentId], references: [id])
+  fields   OcrExtractedField[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("ocr_results")
+}
+
+model OcrExtractedField {
+  id String @id @default(uuid())
+
+  ocrResultId String @map("ocr_result_id")
+  fieldName   String @map("field_name")
+  value       String?
+  confidence  Float?
+
+  ocrResult OcrResult @relation(fields: [ocrResultId], references: [id])
+
+  @@map("ocr_extracted_fields")
+}
+
+// =========================
+// EXPERT SYSTEM
+// =========================
+
+model ExpertRule {
+  id String @id @default(uuid())
+
+  code        String  @unique
+  name        String
+  description String?
+  module      String?
+
+  isActive Boolean @default(true) @map("is_active")
+  priority Int     @default(1)
+
+  conditions ExpertRuleCondition[]
+  actions    ExpertRuleAction[]
+  details    ValidationResultDetail[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("expert_rules")
+}
+
+model ExpertRuleCondition {
+  id String @id @default(uuid())
+
+  ruleId        String  @map("rule_id")
+  field         String
+  operator      String
+  expectedValue String? @map("expected_value")
+
+  rule ExpertRule @relation(fields: [ruleId], references: [id])
+
+  @@map("expert_rule_conditions")
+}
+
+model ExpertRuleAction {
+  id String @id @default(uuid())
+
+  ruleId     String  @map("rule_id")
+  actionType String  @map("action_type")
+  message    String?
+
+  rule ExpertRule @relation(fields: [ruleId], references: [id])
+
+  @@map("expert_rule_actions")
+}
+
+model ValidationProcess {
+  id String @id @default(uuid())
+
+  documentId String?          @map("document_id")
+  status     ValidationStatus @default(PENDING)
+
+  document Document? @relation(fields: [documentId], references: [id])
+
+  results ValidationResult[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("validation_processes")
+}
+
+model ValidationResult {
+  id String @id @default(uuid())
+
+  processId String           @map("process_id")
+  status    ValidationStatus
+  summary   String?
+
+  process ValidationProcess       @relation(fields: [processId], references: [id])
+  details ValidationResultDetail[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("validation_results")
+}
+
+model ValidationResultDetail {
+  id String @id @default(uuid())
+
+  validationResultId String  @map("validation_result_id")
+  ruleId             String? @map("rule_id")
+
+  status  ValidationStatus
+  message String?
+
+  validationResult ValidationResult @relation(fields: [validationResultId], references: [id])
+  rule             ExpertRule?      @relation(fields: [ruleId], references: [id])
+
+  @@map("validation_result_details")
+}
+
+// =========================
+// WAREHOUSE
+// =========================
+
+model Warehouse {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  location    String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  entries     WarehouseEntry[]
+  inventory   WarehouseInventory[]
+  adjustments WarehouseAdjustment[]
+  dispatches  Dispatch[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("warehouses")
+}
+
+model WarehouseEntry {
+  id String @id @default(uuid())
+
+  supplierId  String? @map("supplier_id")
+  warehouseId String  @map("warehouse_id")
+
+  entryNumber   String?  @unique @map("entry_number")
+  invoiceNumber String?  @map("invoice_number")
+  entryDate     DateTime @default(now()) @map("entry_date")
+
+  status EntryStatus @default(DRAFT)
+
+  supplier  Supplier? @relation(fields: [supplierId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  details   WarehouseEntryDetail[]
+  documents Document[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("warehouse_entries")
+}
+
+model WarehouseEntryDetail {
+  id String @id @default(uuid())
+
+  warehouseEntryId String  @map("warehouse_entry_id")
+  medicineId       String  @map("medicine_id")
+  batchId          String? @map("batch_id")
+
+  quantity Int
+  unitCost Decimal? @map("unit_cost")
+
+  warehouseEntry WarehouseEntry @relation(fields: [warehouseEntryId], references: [id])
+  medicine       Medicine       @relation(fields: [medicineId], references: [id])
+  batch          MedicineBatch? @relation(fields: [batchId], references: [id])
+
+  @@map("warehouse_entry_details")
+}
+
+model WarehouseInventory {
+  id String @id @default(uuid())
+
+  warehouseId String  @map("warehouse_id")
+  medicineId  String  @map("medicine_id")
+  batchId     String? @map("batch_id")
+
+  stock        Int @default(0)
+  minimumStock Int @default(0) @map("minimum_stock")
+
+  warehouse Warehouse      @relation(fields: [warehouseId], references: [id])
+  medicine  Medicine       @relation(fields: [medicineId], references: [id])
+  batch     MedicineBatch? @relation(fields: [batchId], references: [id])
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([warehouseId, medicineId, batchId])
+  @@map("warehouse_inventory")
+}
+
+model WarehouseAdjustment {
+  id String @id @default(uuid())
+
+  warehouseId String @map("warehouse_id")
+  reason      String
+
+  warehouse Warehouse                   @relation(fields: [warehouseId], references: [id])
+  details   WarehouseAdjustmentDetail[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("warehouse_adjustments")
+}
+
+model WarehouseAdjustmentDetail {
+  id String @id @default(uuid())
+
+  adjustmentId String @map("adjustment_id")
+  medicineId   String @map("medicine_id")
+  batchId      String? @map("batch_id")
+  quantity     Int
+  reason       String?
+
+  adjustment WarehouseAdjustment @relation(fields: [adjustmentId], references: [id])
+
+  @@map("warehouse_adjustment_details")
+}
+
+// =========================
+// PHARMACY
+// =========================
+
+model Pharmacy {
+  id String @id @default(uuid())
+
+  name     String
+  location String?
+  isActive Boolean @default(true) @map("is_active")
+
+  inventory     PharmacyInventory[]
+  receptions    PharmacyReception[]
+  dispensations PharmacyDispensation[]
+  returns       PharmacyReturn[]
+  requests      Request[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pharmacies")
+}
+
+model PharmacyInventory {
+  id String @id @default(uuid())
+
+  pharmacyId String  @map("pharmacy_id")
+  medicineId String  @map("medicine_id")
+  batchId    String? @map("batch_id")
+
+  stock        Int @default(0)
+  minimumStock Int @default(0) @map("minimum_stock")
+
+  pharmacy Pharmacy       @relation(fields: [pharmacyId], references: [id])
+  medicine Medicine       @relation(fields: [medicineId], references: [id])
+  batch    MedicineBatch? @relation(fields: [batchId], references: [id])
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([pharmacyId, medicineId, batchId])
+  @@map("pharmacy_inventory")
+}
+
+model PharmacyReception {
+  id String @id @default(uuid())
+
+  pharmacyId String  @map("pharmacy_id")
+  dispatchId String? @map("dispatch_id")
+  receivedAt DateTime @default(now()) @map("received_at")
+
+  pharmacy Pharmacy  @relation(fields: [pharmacyId], references: [id])
+  dispatch Dispatch? @relation(fields: [dispatchId], references: [id])
+
+  details PharmacyReceptionDetail[]
+
+  @@map("pharmacy_receptions")
+}
+
+model PharmacyReceptionDetail {
+  id String @id @default(uuid())
+
+  receptionId String @map("reception_id")
+  medicineId  String @map("medicine_id")
+  batchId     String? @map("batch_id")
+  quantity    Int
+
+  reception PharmacyReception @relation(fields: [receptionId], references: [id])
+
+  @@map("pharmacy_reception_details")
+}
+
+model PharmacyDispensation {
+  id String @id @default(uuid())
+
+  pharmacyId     String @map("pharmacy_id")
+  patientId      String @map("patient_id")
+  prescriptionId String @map("prescription_id")
+
+  dispensedAt DateTime @default(now()) @map("dispensed_at")
+
+  pharmacy     Pharmacy     @relation(fields: [pharmacyId], references: [id])
+  patient      Patient      @relation(fields: [patientId], references: [id])
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+
+  details PharmacyDispensationDetail[]
+
+  @@map("pharmacy_dispensations")
+}
+
+model PharmacyDispensationDetail {
+  id String @id @default(uuid())
+
+  dispensationId String  @map("dispensation_id")
+  medicineId     String  @map("medicine_id")
+  batchId        String? @map("batch_id")
+  quantity       Int
+
+  dispensation PharmacyDispensation @relation(fields: [dispensationId], references: [id])
+  medicine     Medicine             @relation(fields: [medicineId], references: [id])
+  batch        MedicineBatch?       @relation(fields: [batchId], references: [id])
+
+  @@map("pharmacy_dispensation_details")
+}
+
+model PharmacyReturn {
+  id String @id @default(uuid())
+
+  pharmacyId String @map("pharmacy_id")
+  reason     String
+  returnedAt DateTime @default(now()) @map("returned_at")
+
+  pharmacy Pharmacy @relation(fields: [pharmacyId], references: [id])
+
+  @@map("pharmacy_returns")
+}
+
+// =========================
+// REQUESTS / DISPATCHES
+// =========================
+
+model Request {
+  id String @id @default(uuid())
+
+  pharmacyId String        @map("pharmacy_id")
+  status     RequestStatus @default(PENDING)
+
+  requestedAt DateTime @default(now()) @map("requested_at")
+  observation String?
+
+  pharmacy Pharmacy @relation(fields: [pharmacyId], references: [id])
+
+  details    RequestDetail[]
+  dispatches Dispatch[]
+
+  @@map("requests")
+}
+
+model RequestDetail {
+  id String @id @default(uuid())
+
+  requestId  String @map("request_id")
+  medicineId String @map("medicine_id")
+  quantity   Int
+
+  request  Request  @relation(fields: [requestId], references: [id])
+  medicine Medicine @relation(fields: [medicineId], references: [id])
+
+  @@map("request_details")
+}
+
+model Dispatch {
+  id String @id @default(uuid())
+
+  requestId   String?        @map("request_id")
+  warehouseId String         @map("warehouse_id")
+  status      DispatchStatus @default(PENDING)
+
+  dispatchedAt DateTime? @map("dispatched_at")
+
+  request   Request?  @relation(fields: [requestId], references: [id])
+  warehouse Warehouse @relation(fields: [warehouseId], references: [id])
+
+  details    DispatchDetail[]
+  receptions PharmacyReception[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("dispatches")
+}
+
+model DispatchDetail {
+  id String @id @default(uuid())
+
+  dispatchId String  @map("dispatch_id")
+  medicineId String  @map("medicine_id")
+  batchId    String? @map("batch_id")
+  quantity   Int
+
+  dispatch Dispatch      @relation(fields: [dispatchId], references: [id])
+  medicine Medicine      @relation(fields: [medicineId], references: [id])
+  batch    MedicineBatch? @relation(fields: [batchId], references: [id])
+
+  @@map("dispatch_details")
+}
+
+// =========================
+// PATIENTS / DOCTORS / PRESCRIPTIONS
+// =========================
+
+model Patient {
+  id String @id @default(uuid())
+
+  ci        String?
+  fullName  String    @map("full_name")
+  birthDate DateTime? @map("birth_date")
+  phone     String?
+  address   String?
+  isActive  Boolean   @default(true) @map("is_active")
+
+  prescriptions Prescription[]
+  dispensations PharmacyDispensation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("patients")
+}
+
+model Doctor {
+  id String @id @default(uuid())
+
+  fullName      String  @map("full_name")
+  licenseNumber String? @map("license_number")
+  specialty     String?
+  isActive      Boolean @default(true) @map("is_active")
+
+  prescriptions Prescription[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("doctors")
+}
+
+model MedicalService {
+  id String @id @default(uuid())
+
+  name        String  @unique
+  description String?
+  isActive    Boolean @default(true) @map("is_active")
+
+  prescriptions Prescription[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("medical_services")
+}
+
+model Prescription {
+  id String @id @default(uuid())
+
+  patientId        String  @map("patient_id")
+  doctorId         String? @map("doctor_id")
+  medicalServiceId String? @map("medical_service_id")
+
+  prescriptionNumber String?   @map("prescription_number")
+  issuedAt           DateTime? @map("issued_at")
+
+  diagnosis   String?
+  observation String?
+
+  patient        Patient         @relation(fields: [patientId], references: [id])
+  doctor         Doctor?         @relation(fields: [doctorId], references: [id])
+  medicalService MedicalService? @relation(fields: [medicalServiceId], references: [id])
+
+  details       PrescriptionDetail[]
+  documents     Document[]
+  dispensations PharmacyDispensation[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("prescriptions")
+}
+
+model PrescriptionDetail {
+  id String @id @default(uuid())
+
+  prescriptionId String @map("prescription_id")
+  medicineId     String @map("medicine_id")
+
+  dosage    String?
+  frequency String?
+  duration  String?
+  quantity  Int
+
+  prescription Prescription @relation(fields: [prescriptionId], references: [id])
+  medicine     Medicine     @relation(fields: [medicineId], references: [id])
+
+  @@map("prescription_details")
+}
+
+// =========================
+// KARDEX / MOVEMENTS / ALERTS
+// =========================
+
+model StockMovement {
+  id String @id @default(uuid())
+
+  medicineId String  @map("medicine_id")
+  batchId    String? @map("batch_id")
+
+  type     StockMovementType
+  quantity Int
+
+  warehouseId String? @map("warehouse_id")
+  pharmacyId  String? @map("pharmacy_id")
+
+  referenceId String? @map("reference_id")
+  observation String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("stock_movements")
+}
+
+model Kardex {
+  id String @id @default(uuid())
+
+  medicineId String  @map("medicine_id")
+  batchId    String? @map("batch_id")
+
+  movementType StockMovementType @map("movement_type")
+  quantityIn   Int               @default(0) @map("quantity_in")
+  quantityOut  Int               @default(0) @map("quantity_out")
+  balance      Int
+
+  warehouseId String? @map("warehouse_id")
+  pharmacyId  String? @map("pharmacy_id")
+
+  referenceId String? @map("reference_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("kardex")
+}
+
+model Alert {
+  id String @id @default(uuid())
+
+  type   AlertType
+  status AlertStatus @default(PENDING)
+
+  title   String
+  message String
+
+  referenceId String? @map("reference_id")
+
+  createdAt  DateTime  @default(now()) @map("created_at")
+  resolvedAt DateTime? @map("resolved_at")
+
+  @@map("alerts")
+}
+
+// =========================
+// SYSTEM
+// =========================
+
+model FileStorage {
+  id String @id @default(uuid())
+
+  fileName String @map("file_name")
+  filePath String @map("file_path")
+  mimeType String @map("mime_type")
+  size     Int?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("files")
+}
+
+model ReportExport {
+  id String @id @default(uuid())
+
+  type        String
+  filePath    String? @map("file_path")
+  generatedBy String? @map("generated_by")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("report_exports")
+}
+
+model SystemSetting {
+  id String @id @default(uuid())
+
+  key         String  @unique
+  value       String?
+  description String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("system_settings")
+}
