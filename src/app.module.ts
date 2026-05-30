@@ -24,15 +24,19 @@ import { ExpertSystemModule } from './modules/expert-system/expert-system.module
 
 import { WarehouseModule } from './modules/warehouse/warehouse.module';
 import { PharmacyModule } from './modules/pharmacy/pharmacy.module';
-
+import { MedicineBatchesModule } from './modules/medicine-batches/medicine-batches.module';
 import { PrescriptionsModule } from './modules/prescriptions/prescriptions.module';
 import { RequestsModule } from './modules/requests/requests.module';
 import { DispatchesModule } from './modules/dispatches/dispatches.module';
 import { KardexModule } from './modules/kardex/kardex.module';
-
+import { TherapeuticGroupsModule } from './modules/therapeutic-groups/therapeutic-groups.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { FilesModule } from './modules/files/files.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { PharmaceuticalFormsModule } from './modules/pharmaceutical-forms/pharmaceutical-forms.module';
+import { ManufacturersModule } from './modules/manufacturers/manufacturers.module';
+import { ActiveIngredientsModule } from './modules/active-ingredients/active-ingredients.module';
+import { UnitsModule } from './modules/units/units.module';
 
 @Module({
   imports: [
@@ -41,29 +45,29 @@ import { SettingsModule } from './modules/settings/settings.module';
     }),
 
     PrismaModule,
-
     AuthModule,
     UsersModule,
     RolesModule,
     PermissionsModule,
     AuditModule,
-
+    ActiveIngredientsModule,
     MedicinesModule,
+    MedicineBatchesModule,
     LaboratoriesModule,
     SuppliersModule,
-
+    ManufacturersModule,
     DocumentsModule,
     OcrModule,
     ExpertSystemModule,
-
+    PharmaceuticalFormsModule,
     WarehouseModule,
     PharmacyModule,
-
+    UnitsModule,
     PrescriptionsModule,
     RequestsModule,
     DispatchesModule,
     KardexModule,
-
+    TherapeuticGroupsModule,
     ReportsModule,
     FilesModule,
     SettingsModule,

@@ -116,6 +116,42 @@ const permissions = [
 
   ['settings.read', 'Ver configuración', 'settings'],
   ['settings.update', 'Editar configuración', 'settings'],
+
+  //suppliers / proveedores
+  ['suppliers.read', 'Ver proveedores', 'suppliers'],
+  ['suppliers.create', 'Crear proveedores', 'suppliers'],
+  ['suppliers.update', 'Editar proveedores', 'suppliers'],
+  ['suppliers.toggle', 'Activar/Inactivar proveedores', 'suppliers'],
+
+  //ingredients / ingredientes
+  ['active-ingredients.read', 'Ver ingredientes', 'ingredients'],
+  ['active-ingredients.create', 'Crear ingredientes', 'ingredients'],
+  ['active-ingredients.update', 'Editar ingredientes', 'ingredients'],
+  ['active-ingredients.toggle', 'Activar/Inactivar ingredientes', 'ingredients'],
+
+  //pharmaceutical forms / formas farmacéuticas
+  ['pharmaceutical-forms.read', 'Ver formas farmacéuticas', 'pharmaceutical-forms'],
+  ['pharmaceutical-forms.create', 'Crear formas farmacéuticas', 'pharmaceutical-forms'],
+  ['pharmaceutical-forms.update', 'Editar formas farmacéuticas', 'pharmaceutical-forms'],
+  ['pharmaceutical-forms.toggle', 'Activar/Inactivar formas farmacéuticas', 'pharmaceutical-forms'],
+
+  //units / unidades
+  ['units.read', 'Ver unidades', 'units'],
+  ['units.create', 'Crear unidades', 'units'],
+  ['units.update', 'Editar unidades', 'units'],
+  ['units.toggle', 'Activar/Inactivar unidades', 'units'],
+
+  //therapeutic groups / grupos terapéuticos
+  ['therapeutic-groups.read', 'Ver grupos terapéuticos', 'therapeutic-groups'],
+  ['therapeutic-groups.create', 'Crear grupos terapéuticos', 'therapeutic-groups'],
+  ['therapeutic-groups.update', 'Editar grupos terapéuticos', 'therapeutic-groups'],
+  ['therapeutic-groups.toggle', 'Activar/Inactivar grupos terapéuticos', 'therapeutic-groups'],
+
+  //medicines batch / lotes de medicamentos
+  ['medicine-batches.read', 'Ver lotes de medicamentos', 'medicine-batches'],
+  ['medicine-batches.create', 'Crear lotes de medicamentos', 'medicine-batches'],
+  ['medicine-batches.update', 'Editar lotes de medicamentos', 'medicine-batches'],
+  ['medicine-batches.toggle', 'Activar/Inactivar lotes de medicamentos', 'medicine-batches'],
 ] as const;
 
 async function main() {
