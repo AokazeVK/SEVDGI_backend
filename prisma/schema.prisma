@@ -309,9 +309,9 @@ model Medicine {
   therapeuticGroup   TherapeuticGroup?   @relation(fields: [therapeuticGroupId], references: [id])
   manufacturer       Manufacturer?       @relation(fields: [manufacturerId], references: [id])
 
-  activeIngredients    MedicineActiveIngredient[]
+  activeIngredients     MedicineActiveIngredient[]
   sanitaryRegistrations SanitaryRegistration[]
-  batches              MedicineBatch[]
+  batches               MedicineBatch[]
 
   warehouseEntryDetails WarehouseEntryDetail[]
   warehouseInventory    WarehouseInventory[]
@@ -463,8 +463,8 @@ model OcrResult {
 model OcrExtractedField {
   id String @id @default(uuid())
 
-  ocrResultId String @map("ocr_result_id")
-  fieldName   String @map("field_name")
+  ocrResultId String  @map("ocr_result_id")
+  fieldName   String  @map("field_name")
   value       String?
   confidence  Float?
 
@@ -545,7 +545,7 @@ model ValidationResult {
   status    ValidationStatus
   summary   String?
 
-  process ValidationProcess       @relation(fields: [processId], references: [id])
+  process ValidationProcess        @relation(fields: [processId], references: [id])
   details ValidationResultDetail[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -618,16 +618,16 @@ model WarehouseEntry {
 model WarehouseEntryDetail {
   id String @id @default(uuid())
 
-  warehouseEntryId String  @map("warehouse_entry_id")
-  medicineId       String  @map("medicine_id")
-  batchId          String? @map("batch_id")
+  warehouseEntryId String @map("warehouse_entry_id")
+  medicineId       String @map("medicine_id")
+  batchId          String @map("batch_id")
 
   quantity Int
   unitCost Decimal? @map("unit_cost")
 
   warehouseEntry WarehouseEntry @relation(fields: [warehouseEntryId], references: [id])
   medicine       Medicine       @relation(fields: [medicineId], references: [id])
-  batch          MedicineBatch? @relation(fields: [batchId], references: [id])
+  batch          MedicineBatch  @relation(fields: [batchId], references: [id])
 
   @@map("warehouse_entry_details")
 }
@@ -635,17 +635,18 @@ model WarehouseEntryDetail {
 model WarehouseInventory {
   id String @id @default(uuid())
 
-  warehouseId String  @map("warehouse_id")
-  medicineId  String  @map("medicine_id")
-  batchId     String? @map("batch_id")
+  warehouseId String @map("warehouse_id")
+  medicineId  String @map("medicine_id")
+  batchId     String @map("batch_id")
 
   stock        Int @default(0)
   minimumStock Int @default(0) @map("minimum_stock")
 
-  warehouse Warehouse      @relation(fields: [warehouseId], references: [id])
-  medicine  Medicine       @relation(fields: [medicineId], references: [id])
-  batch     MedicineBatch? @relation(fields: [batchId], references: [id])
+  warehouse Warehouse     @relation(fields: [warehouseId], references: [id])
+  medicine  Medicine      @relation(fields: [medicineId], references: [id])
+  batch     MedicineBatch @relation(fields: [batchId], references: [id])
 
+  createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@unique([warehouseId, medicineId, batchId])
@@ -669,8 +670,8 @@ model WarehouseAdjustment {
 model WarehouseAdjustmentDetail {
   id String @id @default(uuid())
 
-  adjustmentId String @map("adjustment_id")
-  medicineId   String @map("medicine_id")
+  adjustmentId String  @map("adjustment_id")
+  medicineId   String  @map("medicine_id")
   batchId      String? @map("batch_id")
   quantity     Int
   reason       String?
@@ -726,8 +727,8 @@ model PharmacyInventory {
 model PharmacyReception {
   id String @id @default(uuid())
 
-  pharmacyId String  @map("pharmacy_id")
-  dispatchId String? @map("dispatch_id")
+  pharmacyId String   @map("pharmacy_id")
+  dispatchId String?  @map("dispatch_id")
   receivedAt DateTime @default(now()) @map("received_at")
 
   pharmacy Pharmacy  @relation(fields: [pharmacyId], references: [id])
@@ -741,8 +742,8 @@ model PharmacyReception {
 model PharmacyReceptionDetail {
   id String @id @default(uuid())
 
-  receptionId String @map("reception_id")
-  medicineId  String @map("medicine_id")
+  receptionId String  @map("reception_id")
+  medicineId  String  @map("medicine_id")
   batchId     String? @map("batch_id")
   quantity    Int
 
@@ -787,7 +788,7 @@ model PharmacyDispensationDetail {
 model PharmacyReturn {
   id String @id @default(uuid())
 
-  pharmacyId String @map("pharmacy_id")
+  pharmacyId String   @map("pharmacy_id")
   reason     String
   returnedAt DateTime @default(now()) @map("returned_at")
 
@@ -859,8 +860,8 @@ model DispatchDetail {
   batchId    String? @map("batch_id")
   quantity   Int
 
-  dispatch Dispatch      @relation(fields: [dispatchId], references: [id])
-  medicine Medicine      @relation(fields: [medicineId], references: [id])
+  dispatch Dispatch       @relation(fields: [dispatchId], references: [id])
+  medicine Medicine       @relation(fields: [medicineId], references: [id])
   batch    MedicineBatch? @relation(fields: [batchId], references: [id])
 
   @@map("dispatch_details")

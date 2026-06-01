@@ -37,6 +37,8 @@ import { PharmaceuticalFormsModule } from './modules/pharmaceutical-forms/pharma
 import { ManufacturersModule } from './modules/manufacturers/manufacturers.module';
 import { ActiveIngredientsModule } from './modules/active-ingredients/active-ingredients.module';
 import { UnitsModule } from './modules/units/units.module';
+import { WarehouseEntriesModule } from './modules/warehouse-entries/warehouse-entries.module';
+import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
 
 @Module({
   imports: [
@@ -59,8 +61,10 @@ import { UnitsModule } from './modules/units/units.module';
     DocumentsModule,
     OcrModule,
     ExpertSystemModule,
+    WarehouseEntriesModule,
     PharmaceuticalFormsModule,
     WarehouseModule,
+    WarehouseInventoryModule,
     PharmacyModule,
     UnitsModule,
     PrescriptionsModule,

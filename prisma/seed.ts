@@ -67,13 +67,29 @@ const permissions = [
 
   // Almacén
   ['warehouse.read', 'Ver almacén', 'warehouse'],
+  ['warehouse.create', 'Crear registros en almacén', 'warehouse'],
+  ['warehouse.update', 'Editar registros en almacén', 'warehouse'],
+  ['warehouse.toggle', 'Activar/Inactivar registros en almacén', 'warehouse'],
   ['warehouse.entry', 'Registrar ingreso a almacén', 'warehouse'],
   ['warehouse.adjust', 'Ajustar stock almacén', 'warehouse'],
   ['warehouse.dispatch', 'Despachar desde almacén', 'warehouse'],
   ['warehouse.kardex', 'Ver kardex almacén', 'warehouse'],
 
+  // Warehouse entries / ingresos al almacén
+  ['warehouse-entries.read', 'Ver ingresos al almacén', 'warehouse-entries'],
+  ['warehouse-entries.create', 'Crear ingreso en borrador', 'warehouse-entries'],
+  ['warehouse-entries.update', 'Editar ingresos al almacén', 'warehouse-entries'],
+  ['warehouse-entries.register', 'Registrar ingreso definitivo al almacén', 'warehouse-entries'],
+
+  // Warehouse Inventory / inventario de almacén
+  ['warehouse-inventory.read', 'Ver inventario de almacén', 'warehouse-inventory'],
+  ['warehouse-inventory.fefo', 'First Expire, First Out', 'warehouse-inventory'],
+
   // Farmacia
   ['pharmacy.read', 'Ver farmacia', 'pharmacy'],
+  ['pharmacy.create', 'Crear farmacia', 'pharmacy'],
+  ['pharmacy.update', 'Editar farmacia', 'pharmacy'],
+  ['pharmacy.toggle', 'Activar/Inactivar farmacia', 'pharmacy'],
   ['pharmacy.receive', 'Recibir medicamentos en farmacia', 'pharmacy'],
   ['pharmacy.dispense', 'Dispensar medicamentos', 'pharmacy'],
   ['pharmacy.return', 'Registrar devolución farmacia', 'pharmacy'],
