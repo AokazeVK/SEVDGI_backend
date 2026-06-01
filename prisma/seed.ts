@@ -95,6 +95,10 @@ const permissions = [
   ['pharmacy.return', 'Registrar devolución farmacia', 'pharmacy'],
   ['pharmacy.kardex', 'Ver kardex farmacia', 'pharmacy'],
 
+  // Pharmacy-receptions
+  ['pharmacy-receptions.read', 'Ver recepcion en Farmacia', 'pharmacy-receptions'],
+  ['pharmacy-receptions.create', 'Crear recepcion en Farmacia', 'pharmacy-receptions'],
+
   // Pacientes / recetas
   ['patients.read', 'Ver pacientes', 'patients'],
   ['patients.create', 'Crear pacientes', 'patients'],
@@ -122,6 +126,7 @@ const permissions = [
   ['dispatches.create', 'Crear despachos', 'dispatches'],
   ['dispatches.send', 'Enviar despachos', 'dispatches'],
   ['dispatches.receive', 'Recibir despachos', 'dispatches'],
+  ['dispatches.cancel', 'Cancelar despachos', 'dispatches'],
 
   // Reportes / alertas
   ['alerts.read', 'Ver alertas', 'alerts'],

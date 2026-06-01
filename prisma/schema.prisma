@@ -313,13 +313,14 @@ model Medicine {
   sanitaryRegistrations SanitaryRegistration[]
   batches               MedicineBatch[]
 
-  warehouseEntryDetails WarehouseEntryDetail[]
-  warehouseInventory    WarehouseInventory[]
-  pharmacyInventory     PharmacyInventory[]
-  requestDetails        RequestDetail[]
-  dispatchDetails       DispatchDetail[]
-  prescriptionDetails   PrescriptionDetail[]
-  dispensationDetails   PharmacyDispensationDetail[]
+  warehouseEntryDetails    WarehouseEntryDetail[]
+  warehouseInventory       WarehouseInventory[]
+  pharmacyInventory        PharmacyInventory[]
+  requestDetails           RequestDetail[]
+  dispatchDetails          DispatchDetail[]
+  prescriptionDetails      PrescriptionDetail[]
+  dispensationDetails      PharmacyDispensationDetail[]
+  pharmacyReceptionDetails PharmacyReceptionDetail[]
 
   isActive Boolean @default(true) @map("is_active")
 
@@ -370,11 +371,12 @@ model MedicineBatch {
 
   medicine Medicine @relation(fields: [medicineId], references: [id])
 
-  warehouseEntryDetails WarehouseEntryDetail[]
-  warehouseInventory    WarehouseInventory[]
-  pharmacyInventory     PharmacyInventory[]
-  dispatchDetails       DispatchDetail[]
-  dispensationDetails   PharmacyDispensationDetail[]
+  warehouseEntryDetails    WarehouseEntryDetail[]
+  warehouseInventory       WarehouseInventory[]
+  pharmacyInventory        PharmacyInventory[]
+  dispatchDetails          DispatchDetail[]
+  dispensationDetails      PharmacyDispensationDetail[]
+  pharmacyReceptionDetails PharmacyReceptionDetail[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -748,6 +750,8 @@ model PharmacyReceptionDetail {
   quantity    Int
 
   reception PharmacyReception @relation(fields: [receptionId], references: [id])
+  medicine  Medicine          @relation(fields: [medicineId], references: [id])
+  batch     MedicineBatch?    @relation(fields: [batchId], references: [id])
 
   @@map("pharmacy_reception_details")
 }

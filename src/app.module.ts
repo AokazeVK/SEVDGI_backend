@@ -39,6 +39,7 @@ import { ActiveIngredientsModule } from './modules/active-ingredients/active-ing
 import { UnitsModule } from './modules/units/units.module';
 import { WarehouseEntriesModule } from './modules/warehouse-entries/warehouse-entries.module';
 import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
+import { PharmacyReceptionsModule } from './modules/pharmacy-receptions/pharmacy-receptions.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehous
     SuppliersModule,
     ManufacturersModule,
     DocumentsModule,
+    PharmacyReceptionsModule,
     OcrModule,
     ExpertSystemModule,
     WarehouseEntriesModule,
