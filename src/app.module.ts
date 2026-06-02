@@ -40,6 +40,12 @@ import { UnitsModule } from './modules/units/units.module';
 import { WarehouseEntriesModule } from './modules/warehouse-entries/warehouse-entries.module';
 import { WarehouseInventoryModule } from './modules/warehouse-inventory/warehouse-inventory.module';
 import { PharmacyReceptionsModule } from './modules/pharmacy-receptions/pharmacy-receptions.module';
+import { PharmacyInventoryModule } from './modules/pharmacy-inventory/pharmacy-inventory.module';
+import { PatientsModule } from './modules/patients/patients.module';
+import { DoctorsModule } from './modules/doctors/doctors.module';
+import { PharmacyDispensationsModule } from './modules/pharmacy-dispensations/pharmacy-dispensations.module';
+import { MedicalServicesModule } from './modules/medical-services/medical-services.module';
+import { SanitaryRegistrationsModule } from './modules/sanitary-registrations/sanitary-registrations.module';
 
 @Module({
   imports: [
@@ -59,8 +65,14 @@ import { PharmacyReceptionsModule } from './modules/pharmacy-receptions/pharmacy
     LaboratoriesModule,
     SuppliersModule,
     ManufacturersModule,
+    PatientsModule,
+    SanitaryRegistrationsModule,
+    DoctorsModule,
     DocumentsModule,
+    MedicalServicesModule,
     PharmacyReceptionsModule,
+    PharmacyInventoryModule,
+    PharmacyDispensationsModule,
     OcrModule,
     ExpertSystemModule,
     WarehouseEntriesModule,

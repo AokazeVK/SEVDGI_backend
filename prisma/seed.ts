@@ -42,6 +42,16 @@ const permissions = [
   ['manufacturers.update', 'Editar fabricantes', 'manufacturers'],
   ['manufacturers.toggle', 'Activar/Inactivar fabricantes', 'manufacturers'],
 
+  //Sanitay-registrations
+  ['sanitary-registrations.read', 'Ver registros sanitarios', 'sanitary-registrations'],
+  ['sanitary-registrations.create', 'Crear registros sanitarios', 'sanitary-registrations'],
+  ['sanitary-registrations.update', 'Editar registros sanitarios', 'sanitary-registrations'],
+  [
+    'sanitary-registrations.toggle',
+    'Activar/Inactivar registros sanitarios',
+    'sanitary-registrations',
+  ],
+
   // Medicamentos
   ['medicines.read', 'Ver medicamentos', 'medicines'],
   ['medicines.create', 'Crear medicamentos', 'medicines'],
@@ -98,6 +108,20 @@ const permissions = [
   // Pharmacy-receptions
   ['pharmacy-receptions.read', 'Ver recepcion en Farmacia', 'pharmacy-receptions'],
   ['pharmacy-receptions.create', 'Crear recepcion en Farmacia', 'pharmacy-receptions'],
+
+  // Pharmacy-inventory
+  ['pharmacy-inventory.read', 'Ver inventario de farmacia', 'pharmacy-inventory'],
+  ['pharmacy-inventory.fefo', 'Consultar FEFO en farmacia', 'pharmacy-inventory'],
+
+  // Pharmacy-dispensations
+  ['pharmacy-dispensations.read', 'Ver dispensaciones', 'pharmacy-dispensations'],
+  ['pharmacy-dispensations.create', 'Crear dispensación', 'pharmacy-dispensations'],
+
+  // Medical-services
+  ['medical-services.read', 'Ver servicios médicos', 'medical-services'],
+  ['medical-services.create', 'Crear servicios médicos', 'medical-services'],
+  ['medical-services.update', 'Editar servicios médicos', 'medical-services'],
+  ['medical-services.toggle', 'Activar/Inactivar servicios médicos', 'medical-services'],
 
   // Pacientes / recetas
   ['patients.read', 'Ver pacientes', 'patients'],

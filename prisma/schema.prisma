@@ -69,6 +69,13 @@ enum AlertStatus {
   RESOLVED
 }
 
+enum PrescriptionStatus {
+  PENDING
+  PARTIALLY_DISPENSED
+  DISPENSED
+  CANCELLED
+}
+
 // =========================
 // SECURITY
 // =========================
@@ -937,6 +944,8 @@ model Prescription {
 
   diagnosis   String?
   observation String?
+
+  status PrescriptionStatus @default(PENDING)
 
   patient        Patient         @relation(fields: [patientId], references: [id])
   doctor         Doctor?         @relation(fields: [doctorId], references: [id])
