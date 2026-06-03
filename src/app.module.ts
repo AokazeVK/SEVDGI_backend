@@ -46,13 +46,16 @@ import { DoctorsModule } from './modules/doctors/doctors.module';
 import { PharmacyDispensationsModule } from './modules/pharmacy-dispensations/pharmacy-dispensations.module';
 import { MedicalServicesModule } from './modules/medical-services/medical-services.module';
 import { SanitaryRegistrationsModule } from './modules/sanitary-registrations/sanitary-registrations.module';
+import { AlertsModule } from './modules/alerts/alerts.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { StockMovementsModule } from './modules/stock-movements/stock-movements.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-
+    ScheduleModule.forRoot(),
     PrismaModule,
     AuthModule,
     UsersModule,
@@ -64,6 +67,7 @@ import { SanitaryRegistrationsModule } from './modules/sanitary-registrations/sa
     MedicineBatchesModule,
     LaboratoriesModule,
     SuppliersModule,
+    StockMovementsModule,
     ManufacturersModule,
     PatientsModule,
     SanitaryRegistrationsModule,
@@ -74,6 +78,7 @@ import { SanitaryRegistrationsModule } from './modules/sanitary-registrations/sa
     PharmacyInventoryModule,
     PharmacyDispensationsModule,
     OcrModule,
+    AlertsModule,
     ExpertSystemModule,
     WarehouseEntriesModule,
     PharmaceuticalFormsModule,

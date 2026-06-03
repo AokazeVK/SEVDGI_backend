@@ -117,6 +117,12 @@ const permissions = [
   ['pharmacy-dispensations.read', 'Ver dispensaciones', 'pharmacy-dispensations'],
   ['pharmacy-dispensations.create', 'Crear dispensación', 'pharmacy-dispensations'],
 
+  //Kardex
+  ['kardex.read', 'Ver kardex', 'kardex'],
+
+  //Stock-movements
+  ['stock-movements.read', 'Ver movimientos de stock', 'stock-movements'],
+
   // Medical-services
   ['medical-services.read', 'Ver servicios médicos', 'medical-services'],
   ['medical-services.create', 'Crear servicios médicos', 'medical-services'],
@@ -154,7 +160,8 @@ const permissions = [
 
   // Reportes / alertas
   ['alerts.read', 'Ver alertas', 'alerts'],
-  ['alerts.resolve', 'Resolver alertas', 'alerts'],
+  ['alerts.generate', 'Generar alertas automáticas', 'alerts'],
+  ['alerts.update-status', 'Actualizar estado de alertas', 'alerts'],
 
   ['reports.read', 'Ver reportes', 'reports'],
   ['reports.export', 'Exportar reportes', 'reports'],
