@@ -68,6 +68,12 @@ const permissions = [
   ['ocr.process', 'Procesar OCR', 'ocr'],
   ['ocr.retry', 'Reintentar OCR', 'ocr'],
 
+  ['ocr-results.read', 'Ver resultados OCR', 'ocr-results'],
+  ['ocr-results.create', 'Crear resultados OCR', 'ocr-results'],
+
+  ['ocr-extracted-fields.read', 'Ver campos extraídos OCR', 'ocr-extracted-fields'],
+  ['ocr-extracted-fields.create', 'Crear campos extraídos OCR', 'ocr-extracted-fields'],
+
   ['expert.rules.read', 'Ver reglas', 'expert-system'],
   ['expert.rules.create', 'Crear reglas', 'expert-system'],
   ['expert.rules.update', 'Editar reglas', 'expert-system'],
@@ -204,6 +210,22 @@ const permissions = [
   ['medicine-batches.create', 'Crear lotes de medicamentos', 'medicine-batches'],
   ['medicine-batches.update', 'Editar lotes de medicamentos', 'medicine-batches'],
   ['medicine-batches.toggle', 'Activar/Inactivar lotes de medicamentos', 'medicine-batches'],
+
+  // Document types / tipos de documento
+  ['document-types.read', 'Ver tipos de documento', 'document-types'],
+  ['document-types.create', 'Crear tipos de documento', 'document-types'],
+  ['document-types.update', 'Editar tipos de documento', 'document-types'],
+  ['document-types.toggle', 'Activar/Inactivar tipos de documento', 'document-types'],
+
+  // Documents / Documentos
+  ['documents.read', 'Ver documentos', 'documents'],
+  ['documents.create', 'Crear documentos', 'documents'],
+  ['documents.update', 'Editar documentos', 'documents'],
+  ['documents.update-status', 'Actualizar estado de documentos', 'documents'],
+
+  // Document files / Archivos documentales
+  ['document-files.read', 'Ver archivos documentales', 'document-files'],
+  ['document-files.create', 'Crear archivos documentales', 'document-files'],
 ] as const;
 
 async function main() {

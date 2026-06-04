@@ -76,6 +76,14 @@ enum PrescriptionStatus {
   CANCELLED
 }
 
+enum RuleModule {
+  DOCUMENTS
+  INVENTORY
+  PHARMACY
+  SANITARY_REGISTRATION
+  WAREHOUSE
+}
+
 // =========================
 // SECURITY
 // =========================
@@ -485,14 +493,13 @@ model OcrExtractedField {
 // =========================
 // EXPERT SYSTEM
 // =========================
-
 model ExpertRule {
   id String @id @default(uuid())
 
-  code        String  @unique
+  code        String     @unique
   name        String
   description String?
-  module      String?
+  module      RuleModule @default(DOCUMENTS)
 
   isActive Boolean @default(true) @map("is_active")
   priority Int     @default(1)
@@ -510,9 +517,12 @@ model ExpertRule {
 model ExpertRuleCondition {
   id String @id @default(uuid())
 
-  ruleId        String  @map("rule_id")
-  field         String
-  operator      String
+  ruleId String @map("rule_id")
+
+  leftField  String  @map("left_field")
+  operator   String
+  rightField String? @map("right_field")
+
   expectedValue String? @map("expected_value")
 
   rule ExpertRule @relation(fields: [ruleId], references: [id])
@@ -523,9 +533,12 @@ model ExpertRuleCondition {
 model ExpertRuleAction {
   id String @id @default(uuid())
 
-  ruleId     String  @map("rule_id")
-  actionType String  @map("action_type")
-  message    String?
+  ruleId String @map("rule_id")
+
+  actionType String @map("action_type")
+  severity   String @default("OBSERVED")
+
+  message String?
 
   rule ExpertRule @relation(fields: [ruleId], references: [id])
 
@@ -535,10 +548,13 @@ model ExpertRuleAction {
 model ValidationProcess {
   id String @id @default(uuid())
 
-  documentId String?          @map("document_id")
-  status     ValidationStatus @default(PENDING)
+  documentId       String? @map("document_id")
+  warehouseEntryId String? @map("warehouse_entry_id")
 
-  document Document? @relation(fields: [documentId], references: [id])
+  status ValidationStatus @default(PENDING)
+
+  document       Document?       @relation(fields: [documentId], references: [id])
+  warehouseEntry WarehouseEntry? @relation(fields: [warehouseEntryId], references: [id])
 
   results ValidationResult[]
 
@@ -615,8 +631,9 @@ model WarehouseEntry {
   supplier  Supplier? @relation(fields: [supplierId], references: [id])
   warehouse Warehouse @relation(fields: [warehouseId], references: [id])
 
-  details   WarehouseEntryDetail[]
-  documents Document[]
+  details     WarehouseEntryDetail[]
+  documents   Document[]
+  validations ValidationProcess[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

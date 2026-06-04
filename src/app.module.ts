@@ -49,6 +49,10 @@ import { SanitaryRegistrationsModule } from './modules/sanitary-registrations/sa
 import { AlertsModule } from './modules/alerts/alerts.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { StockMovementsModule } from './modules/stock-movements/stock-movements.module';
+import { DocumentTypesModule } from './modules/document-types/document-types.module';
+import { DocumentFilesModule } from './modules/document-files/document-files.module';
+import { OcrResultsModule } from './modules/ocr-results/ocr-results.module';
+import { OcrExtractedFieldsModule } from './modules/ocr-extracted-fields/ocr-extracted-fields.module';
 
 @Module({
   imports: [
@@ -64,6 +68,8 @@ import { StockMovementsModule } from './modules/stock-movements/stock-movements.
     AuditModule,
     ActiveIngredientsModule,
     MedicinesModule,
+    DocumentTypesModule,
+    DocumentFilesModule,
     MedicineBatchesModule,
     LaboratoriesModule,
     SuppliersModule,
@@ -78,6 +84,8 @@ import { StockMovementsModule } from './modules/stock-movements/stock-movements.
     PharmacyInventoryModule,
     PharmacyDispensationsModule,
     OcrModule,
+    OcrResultsModule,
+    OcrExtractedFieldsModule,
     AlertsModule,
     ExpertSystemModule,
     WarehouseEntriesModule,

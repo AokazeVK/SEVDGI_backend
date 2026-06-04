@@ -4,10 +4,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('api');
 
   app.enableCors();
@@ -33,7 +34,60 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
-  SwaggerModule.setup('api/docs', app, document);
+  const tagOrder = [
+    'Auth',
+    'Users',
+    'Roles',
+    'Permissions',
+
+    'Active Ingredients',
+    'Medicines',
+    'Pharmaceutical Forms',
+    'Therapeutic Groups',
+    'Units',
+    'Laboratories',
+    'Manufacturers',
+    'Suppliers',
+    'Sanitary Registrations',
+
+    'Warehouse',
+    'Warehouse Entries',
+    'Warehouse Inventory',
+    'Medicine Batches',
+    'Stock Movements',
+    'Kardex',
+
+    'Pharmacy',
+    'Pharmacy Receptions',
+    'Pharmacy Inventory',
+    'Pharmacy Dispensations',
+
+    'Patients',
+    'Doctors',
+    'Medical Services',
+    'Prescriptions',
+    'Requests',
+    'Dispatches',
+
+    'Alerts',
+
+    'Documents',
+    'Document Types',
+    'Document Files',
+
+    'OCR Results',
+    'OCR Extracted Fields',
+  ];
+
+  document.tags = tagOrder.map((name) => ({ name }));
+
+  SwaggerModule.setup('api/docs', app, document, {
+    swaggerOptions: {
+      operationsSorter: 'alpha',
+      docExpansion: 'list',
+      filter: true,
+    },
+  });
 
   const port = process.env.PORT ?? 3000;
 
