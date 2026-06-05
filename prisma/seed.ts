@@ -74,13 +74,18 @@ const permissions = [
   ['ocr-extracted-fields.read', 'Ver campos extraídos OCR', 'ocr-extracted-fields'],
   ['ocr-extracted-fields.create', 'Crear campos extraídos OCR', 'ocr-extracted-fields'],
 
-  ['expert.rules.read', 'Ver reglas', 'expert-system'],
-  ['expert.rules.create', 'Crear reglas', 'expert-system'],
-  ['expert.rules.update', 'Editar reglas', 'expert-system'],
-  ['expert.rules.toggle', 'Activar/Inactivar reglas', 'expert-system'],
+  ['expert-rules.read', 'Ver reglas', 'expert-system'],
+  ['expert-rules.create', 'Crear reglas', 'expert-system'],
+  ['expert-rules.update', 'Editar reglas', 'expert-system'],
+  ['expert-rules.toggle', 'Activar/Inactivar reglas', 'expert-system'],
   ['expert.validation.run', 'Ejecutar validación experta', 'expert-system'],
   ['expert.validation.read', 'Ver validaciones expertas', 'expert-system'],
 
+  ['validation-processes.read', 'Ver procesos de validación', 'validation-processes'],
+  ['validation-processes.create', 'Crear procesos de validación', 'validation-processes'],
+  ['validation-processes.update-status', 'Actualizar estado de validación', 'validation-processes'],
+
+  ['inference-engine.process', 'Procesar motor de inferencia', 'inference-engine'],
   // Almacén
   ['warehouse.read', 'Ver almacén', 'warehouse'],
   ['warehouse.create', 'Crear registros en almacén', 'warehouse'],

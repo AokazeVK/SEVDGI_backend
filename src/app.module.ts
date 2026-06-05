@@ -53,6 +53,9 @@ import { DocumentTypesModule } from './modules/document-types/document-types.mod
 import { DocumentFilesModule } from './modules/document-files/document-files.module';
 import { OcrResultsModule } from './modules/ocr-results/ocr-results.module';
 import { OcrExtractedFieldsModule } from './modules/ocr-extracted-fields/ocr-extracted-fields.module';
+import { ExpertRulesModule } from './modules/expert-rules/expert-rules.module';
+import { ValidationProcessesModule } from './modules/validation-processes/validation-processes.module';
+import { InferenceEngineModule } from './modules/inference-engine/inference-engine.module';
 
 @Module({
   imports: [
@@ -88,6 +91,9 @@ import { OcrExtractedFieldsModule } from './modules/ocr-extracted-fields/ocr-ext
     OcrExtractedFieldsModule,
     AlertsModule,
     ExpertSystemModule,
+    ExpertRulesModule,
+    ValidationProcessesModule,
+    InferenceEngineModule,
     WarehouseEntriesModule,
     PharmaceuticalFormsModule,
     WarehouseModule,
