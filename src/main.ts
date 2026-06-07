@@ -75,12 +75,16 @@ async function bootstrap() {
     'Document Types',
     'Document Files',
 
+    'OCR',
     'OCR Results',
     'OCR Extracted Fields',
 
     'Expert Rules',
     'Validation Processes',
+    'Validation Results',
     'Inference Engine',
+
+    'Field Extraction',
   ];
 
   document.tags = tagOrder.map((name) => ({ name }));

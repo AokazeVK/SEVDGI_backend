@@ -74,6 +74,8 @@ const permissions = [
   ['ocr-extracted-fields.read', 'Ver campos extraídos OCR', 'ocr-extracted-fields'],
   ['ocr-extracted-fields.create', 'Crear campos extraídos OCR', 'ocr-extracted-fields'],
 
+  ['field-extraction.process', 'Procesar extracción de campos', 'field-extraction'],
+
   ['expert-rules.read', 'Ver reglas', 'expert-system'],
   ['expert-rules.create', 'Crear reglas', 'expert-system'],
   ['expert-rules.update', 'Editar reglas', 'expert-system'],
@@ -86,6 +88,8 @@ const permissions = [
   ['validation-processes.update-status', 'Actualizar estado de validación', 'validation-processes'],
 
   ['inference-engine.process', 'Procesar motor de inferencia', 'inference-engine'],
+
+  ['validation-results.read', 'Ver resultados de validación', 'validation-results'],
   // Almacén
   ['warehouse.read', 'Ver almacén', 'warehouse'],
   ['warehouse.create', 'Crear registros en almacén', 'warehouse'],

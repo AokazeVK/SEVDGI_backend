@@ -56,7 +56,8 @@ import { OcrExtractedFieldsModule } from './modules/ocr-extracted-fields/ocr-ext
 import { ExpertRulesModule } from './modules/expert-rules/expert-rules.module';
 import { ValidationProcessesModule } from './modules/validation-processes/validation-processes.module';
 import { InferenceEngineModule } from './modules/inference-engine/inference-engine.module';
-
+import { ValidationResultsModule } from './modules/validation-results/validation-results.module';
+import { FieldExtractionModule } from './modules/field-extraction/field-extraction.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -93,6 +94,8 @@ import { InferenceEngineModule } from './modules/inference-engine/inference-engi
     ExpertSystemModule,
     ExpertRulesModule,
     ValidationProcessesModule,
+    ValidationResultsModule,
+    FieldExtractionModule,
     InferenceEngineModule,
     WarehouseEntriesModule,
     PharmaceuticalFormsModule,
